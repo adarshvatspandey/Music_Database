@@ -4,7 +4,7 @@ This project is a Music Store Database Management System developed using Postgre
 
 Tables Used in the Project
 
-PROJECT DASHBOARD PREVIEW
+🗄️ Database Schema & Relationships
 ![image](https://github.com/adarshvatspandey/Music_Database/blob/348033be0220e793ac26bb6ebfeb96798e5b0d3c/Analysis.png)
 
 
