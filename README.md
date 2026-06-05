@@ -5,6 +5,7 @@ This project is a Music Store Database Management System developed using Postgre
 Tables Used in the Project
 
 PROJECT DASHBOARD PREVIEW
+![image]()
 
 
 🎤 Artist
