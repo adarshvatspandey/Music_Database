@@ -6,6 +6,7 @@ Tables Used in the Project
 
 🗄️ Database Schema & Relationships
 ![image](https://github.com/adarshvatspandey/Music_Database/blob/348033be0220e793ac26bb6ebfeb96798e5b0d3c/Analysis.png)
+![image](https://github.com/adarshvatspandey/Music_Database/blob/1e40a66714c259a563b3332dea3b73bac64f1db8/ERD%20ForDatabase.png)
 
 
 🎤 Artist
