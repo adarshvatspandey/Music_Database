@@ -4,7 +4,8 @@
 This project is a SQL-based data analysis of a music streaming platform (similar to Spotify). It explores user behavior, artist performance, revenue distribution, and geographical trends using PostgreSQL.
 
 The main objective is to convert raw transactional music data into meaningful business insights that can support decision-making in marketing, product strategy, and recommendation systems.
-
+![image](https://github.com/adarshvatspandey/Music_Database/blob/bab9cad58af41b6e6e9fba031e470f4716b985a0/image.jpeg)
+![image](https://github.com/adarshvatspandey/Music_Database/blob/bab9cad58af41b6e6e9fba031e470f4716b985a0/ERD%20ForDatabase.png)
 ---
 
 ## 🧠 Project Objective
