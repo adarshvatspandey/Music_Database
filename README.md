@@ -136,13 +136,259 @@ The music streaming platform wants to answer the following key questions:
 By answering these questions, the business can make data-driven decisions to improve revenue, user retention, and platform growth.
 
 ---
+# 🎵 Music Streaming Analytics & Business Insights using PostgreSQL
 
-## 💰 Revenue Concentration Analysis
+## 📌 Project Overview
 
-### Business Question
-Do a small percentage of customers generate most of the platform revenue?
+This project analyzes a music streaming database using PostgreSQL to uncover insights about customer behavior, artist performance, music preferences, and revenue generation. The analysis helps simulate real-world business decision-making for a music streaming platform similar to Spotify.
 
-### SQL Query
+---
+
+# 📊 Business Questions, SQL Analysis, Insights & Outcomes
+
+## Q1. Who is the senior most employee based on job title?
+
+```sql
+SELECT title, last_name, first_name
+FROM employee
+ORDER BY levels DESC
+LIMIT 1;
+```
+
+### 📊 Insight
+
+Identifies the highest-ranking employee in the organization.
+
+### 🎯 Business Outcome
+
+Provides visibility into organizational leadership and management structure.
+
+---
+
+## Q2. Which countries have the most invoices?
+
+```sql
+SELECT COUNT(*) AS total_invoices,
+       billing_country
+FROM invoice
+GROUP BY billing_country
+ORDER BY total_invoices DESC;
+```
+
+### 📊 Insight
+
+Some countries generate significantly more transactions than others.
+
+### 🎯 Business Outcome
+
+Helps prioritize marketing investments and customer acquisition efforts in high-performing regions.
+
+---
+
+## Q3. What are the top invoice values?
+
+```sql
+SELECT total
+FROM invoice
+ORDER BY total DESC;
+```
+
+### 📊 Insight
+
+Highlights customers making premium purchases and large transactions.
+
+### 🎯 Business Outcome
+
+Supports customer segmentation and premium subscription strategies.
+
+---
+
+## Q4. Which city generates the highest revenue?
+
+```sql
+SELECT billing_city,
+       SUM(total) AS invoice_total
+FROM invoice
+GROUP BY billing_city
+ORDER BY invoice_total DESC
+LIMIT 1;
+```
+
+### 📊 Insight
+
+Revenue is concentrated in specific cities.
+
+### 🎯 Business Outcome
+
+Identifies the ideal location for promotional events, concerts, and marketing campaigns.
+
+---
+
+## Q5. Who is the best customer?
+
+```sql
+SELECT customer.customer_id,
+       first_name,
+       last_name,
+       SUM(total) AS total_spending
+FROM customer
+JOIN invoice
+ON customer.customer_id = invoice.customer_id
+GROUP BY customer.customer_id,
+         first_name,
+         last_name
+ORDER BY total_spending DESC
+LIMIT 1;
+```
+
+### 📊 Insight
+
+A small group of customers contributes a large portion of revenue.
+
+### 🎯 Business Outcome
+
+Supports VIP customer programs, loyalty rewards, and retention initiatives.
+
+---
+
+## Q6. Who are the Rock music listeners?
+
+```sql
+SELECT DISTINCT email,
+       first_name,
+       last_name
+FROM customer
+JOIN invoice
+ON customer.customer_id = invoice.customer_id
+JOIN invoice_line
+ON invoice.invoice_id = invoice_line.invoice_id
+WHERE track_id IN (
+      SELECT track_id
+      FROM track
+      JOIN genre
+      ON track.genre_id = genre.genre_id
+      WHERE genre.name = 'Rock'
+)
+ORDER BY email;
+```
+
+### 📊 Insight
+
+Identifies customers with strong interest in Rock music.
+
+### 🎯 Business Outcome
+
+Enables targeted marketing campaigns and personalized recommendations.
+
+---
+
+## Q7. Which artists have written the most Rock music?
+
+```sql
+SELECT artist.artist_id,
+       artist.name,
+       COUNT(artist.artist_id) AS number_of_songs
+FROM track
+JOIN album
+ON album.album_id = track.album_id
+JOIN artist
+ON artist.artist_id = album.artist_id
+JOIN genre
+ON genre.genre_id = track.genre_id
+WHERE genre.name = 'Rock'
+GROUP BY artist.artist_id,
+         artist.name
+ORDER BY number_of_songs DESC
+LIMIT 10;
+```
+
+### 📊 Insight
+
+A few artists dominate the Rock genre catalog.
+
+### 🎯 Business Outcome
+
+Helps identify influential artists for promotions, partnerships, and featured playlists.
+
+---
+
+## Q8. Which tracks are longer than the average song length?
+
+```sql
+SELECT name,
+       milliseconds
+FROM track
+WHERE milliseconds >
+(
+    SELECT AVG(milliseconds)
+    FROM track
+)
+ORDER BY milliseconds DESC;
+```
+
+### 📊 Insight
+
+Long-duration tracks appeal to niche listener segments and premium audiences.
+
+### 🎯 Business Outcome
+
+Supports playlist curation and content strategy optimization.
+
+---
+
+## Q9. How much has each customer spent on the best-selling artist?
+
+```sql
+WITH best_selling_artist AS (
+    SELECT artist.artist_id,
+           artist.name AS artist_name,
+           SUM(invoice_line.unit_price * invoice_line.quantity) AS total_sales
+    FROM invoice_line
+    JOIN track
+    ON track.track_id = invoice_line.track_id
+    JOIN album
+    ON album.album_id = track.album_id
+    JOIN artist
+    ON artist.artist_id = album.artist_id
+    GROUP BY artist.artist_id,
+             artist.name
+    ORDER BY total_sales DESC
+    LIMIT 1
+)
+SELECT c.customer_id,
+       c.first_name,
+       c.last_name,
+       bsa.artist_name,
+       SUM(il.unit_price * il.quantity) AS amount_spent
+FROM invoice i
+JOIN customer c
+ON c.customer_id = i.customer_id
+JOIN invoice_line il
+ON il.invoice_id = i.invoice_id
+JOIN track t
+ON t.track_id = il.track_id
+JOIN album alb
+ON alb.album_id = t.album_id
+JOIN best_selling_artist bsa
+ON bsa.artist_id = alb.artist_id
+GROUP BY c.customer_id,
+         c.first_name,
+         c.last_name,
+         bsa.artist_name
+ORDER BY amount_spent DESC;
+```
+
+### 📊 Insight
+
+Customer spending is often concentrated around specific artists.
+
+### 🎯 Business Outcome
+
+Supports artist-focused campaigns and recommendation systems.
+
+---
+
+### SQL Query with Advanced insights
 
 ```sql
 WITH customer_revenue AS (
